@@ -16,14 +16,17 @@
 # limitations under the License.
 
 from typing import List, Tuple, Dict, Union, Any
-import torch
+try:
+    import torch
+except ImportError:  # Lightweight deterministic environments do not require PyTorch.
+    torch = None
 import numpy as np
 import os
 from alphaapollo.core.environments.prompts import *
 from collections import defaultdict
 
 def to_numpy(data):
-    if isinstance(data, torch.Tensor):
+    if torch is not None and isinstance(data, torch.Tensor):
         data = data.detach().cpu().numpy()
     elif isinstance(data, np.ndarray):
         pass
@@ -155,7 +158,7 @@ class EnvironmentManagerBase:
         if not os.path.exists(path):
             os.makedirs(path)
         path = os.path.join(path, f"step{step}.png")
-        if isinstance(image, torch.Tensor):
+        if torch is not None and isinstance(image, torch.Tensor):
             image = image.detach().cpu().numpy()
         if isinstance(image, np.ndarray):
             pass

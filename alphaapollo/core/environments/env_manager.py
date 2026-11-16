@@ -1,4 +1,4 @@
-# Copyright 2025 Nanyang Technological University (NTU), Singapore
+﻿# Copyright 2025 Nanyang Technological University (NTU), Singapore
 # and the verl-agent (GiGPO) team.
 #
 # Copyright 2026 TMLR Group
@@ -23,7 +23,6 @@ from typing import Any, Dict, List, Tuple, Union
 
 import fire
 import numpy as np
-import torch
 from omegaconf import OmegaConf
 
 from alphaapollo.core.environments.base import EnvironmentManagerBase, to_numpy
@@ -450,5 +449,33 @@ def make_envs(config):
         return envs, val_envs
     
     else:
-        raise ValueError(f"Environment {config.env.env_name} not supported")
+        from .geometric.spec import PROBLEM_SPECS
+
+        problem_type = config.env.env_name.lower()
+        if problem_type not in PROBLEM_SPECS:
+            raise ValueError(f"Environment {config.env.env_name} not supported")
+
+        from .geometric import build_geometric_envs, geometric_projection
+        from .geometric.manager import GeometricEnvironmentManager
+
+        _envs = build_geometric_envs(
+            seed=config.env.seed,
+            env_num=config.data.train_batch_size,
+            group_n=group_n,
+            is_train=True,
+            env_config=config.env,
+        )
+        _val_envs = build_geometric_envs(
+            seed=config.env.seed + 1000,
+            env_num=config.data.val_batch_size,
+            group_n=1,
+            is_train=False,
+            env_config=config.env,
+        )
+        projection_f = partial(geometric_projection)
+        envs = GeometricEnvironmentManager(_envs, projection_f, config)
+        val_envs = GeometricEnvironmentManager(_val_envs, projection_f, config)
+        return envs, val_envs
     
+
+

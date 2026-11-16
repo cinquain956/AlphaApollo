@@ -1,5 +1,6 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
+import os
 import sys
 import types
 from importlib import import_module
@@ -267,4 +268,6 @@ def _ensure_multi_turn_rollout_alias() -> None:
     sys.modules[legacy_name] = real_pkg
 
 
-ensure_verl_alias()
+if os.environ.get('ALPHAAPOLLO_LIGHTWEIGHT_IMPORT') != '1':
+    ensure_verl_alias()
+

@@ -1,4 +1,11 @@
-from .workflows.api import evo, rl, sft, test
+﻿"""AlphaApollo public API with lazy workflow imports."""
 
-__all__ = ["rl", "sft", "test", "evo"]
+__all__ = ['rl', 'sft', 'test', 'evo']
 
+
+def __getattr__(name):
+    if name in __all__:
+        from .workflows import api
+
+        return getattr(api, name)
+    raise AttributeError(f'module {__name__!r} has no attribute {name!r}')
