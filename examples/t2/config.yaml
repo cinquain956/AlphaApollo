@@ -1,0 +1,53 @@
+﻿experiment:
+  iterations: 32
+  seeds: [11, 22, 33]
+  algorithms: [openevolve_native, evox]
+  problems: [circle_packing, mmd]
+  output_root: outputs/t2
+  max_workers: 3
+  checkpoint_interval: 1
+  evox_switch_interval: 8
+
+model:
+  name: qwen3.8-27b
+  api_base_env: QWEN_API_BASE
+  api_key_env: QWEN_API_KEY
+  temperature: 0.7
+  max_tokens: 8192
+  timeout: 600
+  retries: 2
+
+problems:
+  circle_packing:
+    evaluator: examples/t2/evaluators/circle_packing.py
+    initial_program: examples/t2/programs/circle_packing_initial.py
+    execution_timeout: 30
+    instance:
+      n: 26
+      container_type: rectangle
+      width: 1.0
+      height: 1.0
+      tolerance: 1.0e-6
+      benchmark: 2.635
+    task_instruction: >-
+      Improve a complete Python program for circle packing in a unit square.
+      The program must define solve(instance), read n and container parameters
+      from instance, return exactly n centers and radii, and maximize the sum
+      of radii while satisfying every deterministic checker constraint. Do not
+      hardcode a layout that only works for n=26.
+
+  mmd:
+    evaluator: examples/t2/evaluators/mmd.py
+    initial_program: examples/t2/programs/mmd_initial.py
+    execution_timeout: 30
+    instance:
+      n: 14
+      dimensions: 3
+      benchmark: 0.2400470626477107
+    task_instruction: >-
+      Improve a complete Python program for the maximum-minimum-distance ratio
+      problem. The program must define solve(instance), read n and dimensions
+      from instance, return exactly n finite points of the requested dimension,
+      and maximize minimum pairwise distance divided by maximum pairwise
+      distance. Do not hardcode a layout that only works for n=14 or 3D.
+
