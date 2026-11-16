@@ -1,0 +1,69 @@
+﻿experiment:
+  t2_output_root: outputs/t2
+  output_root: outputs/t3
+  algorithms: [openevolve_native, evox]
+  problems: [circle_packing, mmd]
+  execution_timeout: 30
+  iterations: 32
+  # Null selects the completed seed with the largest retained trajectory and
+  # records the exact choice in outputs/t3/manifest.json.
+  selected_seeds:
+    openevolve_native__circle_packing:
+    evox__circle_packing:
+    openevolve_native__mmd:
+    evox__mmd:
+
+targets:
+  circle_packing:
+    - name: square_n26_source
+      label: Square n=26 (source)
+      instance: {n: 26, container_type: rectangle, width: 1.0, height: 1.0, tolerance: 1.0e-6}
+      known_best_objective: 2.635
+      source_note: Task benchmark value.
+    - name: square_n24
+      label: Square n=24
+      instance: {n: 24, container_type: rectangle, width: 1.0, height: 1.0, tolerance: 1.0e-6}
+      known_best_objective: 2.53031
+      source_note: Approximate Packing Center construction.
+    - name: square_n28
+      label: Square n=28
+      instance: {n: 28, container_type: rectangle, width: 1.0, height: 1.0, tolerance: 1.0e-6}
+      known_best_objective: 2.73773
+      source_note: Approximate Packing Center construction.
+    - name: triangle_n24
+      label: Equilateral triangle n=24
+      instance: {n: 24, container_type: equilateral_triangle, side_length: 1.0, tolerance: 1.0e-6}
+      known_best_objective: 1.655
+      source_note: Approximate Packing Center construction; normalization is approximate.
+    - name: triangle_n28
+      label: Equilateral triangle n=28
+      instance: {n: 28, container_type: equilateral_triangle, side_length: 1.0, tolerance: 1.0e-6}
+      known_best_objective: 1.8106451119404765
+      source_note: Published construction value (168 - 28 sqrt(3)) / 66.
+
+  mmd:
+    - name: mmd_3d_n14_source
+      label: 3D n=14 (source)
+      instance: {n: 14, dimensions: 3}
+      known_best_objective: 0.48994597931579226
+      source_note: 1 / sqrt(4.165849767), matching the task benchmark.
+    - name: mmd_3d_n12
+      label: 3D n=12
+      instance: {n: 12, dimensions: 3}
+      known_best_objective: 0.5257311121191336
+      source_note: 1 / sqrt((5 + sqrt(5)) / 2).
+    - name: mmd_3d_n16
+      label: 3D n=16
+      instance: {n: 16, dimensions: 3}
+      known_best_objective: 0.46865275548888286
+      source_note: Approximate 1 / sqrt(4.553); normalization is approximate.
+    - name: mmd_2d_n12
+      label: 2D n=12
+      instance: {n: 12, dimensions: 2}
+      known_best_objective: 0.34372376933344034
+      source_note: 1 / sqrt(5 + 2 sqrt(3)).
+    - name: mmd_2d_n16
+      label: 2D n=16
+      instance: {n: 16, dimensions: 2}
+      known_best_objective: 0.27854180665692974
+      source_note: Approximate 1 / sqrt(12.889); normalization is approximate.
